@@ -1,0 +1,199 @@
+create table broker
+(
+    broker_id    int         not null,
+    broker_fname varchar(20) not null,
+    broker_lname varchar(20) not null,
+    constraint BROKER_broker_id_uindex
+        unique (broker_id)
+);
+
+alter table broker
+    add primary key (broker_id);
+
+create table company_data
+(
+    ticker         varchar(6)    not null
+        primary key,
+    open           decimal(6, 2) not null,
+    price          decimal(6, 2) not null,
+    previous_close decimal(6, 2) not null,
+    high           decimal(6, 2) not null,
+    low            decimal(6, 2) not null,
+    market_cap     int           not null,
+    p_e_ratio      decimal(7, 2) not null,
+    dividend_yield decimal(5, 2) not null,
+    `52_week_high` decimal(6, 2) not null,
+    `52_week_low`  decimal(6, 2) not null
+);
+
+create table company_financials
+(
+    ticker           varchar(6)    not null,
+    revenue          int           not null,
+    net_income       int           not null,
+    eps              decimal(6, 2) not null,
+    operating_income int           not null,
+    cash_income      int           not null,
+    constraint COMPANY_FINANCIALS_ticker_uindex
+        unique (ticker)
+);
+
+alter table company_financials
+    add primary key (ticker);
+
+create table company_info
+(
+    ticker       varchar(6)  not null
+        primary key,
+    company_name varchar(50) not null,
+    exchange     varchar(50) not null,
+    sector       varchar(50) not null,
+    industry     varchar(50) not null,
+    ceo          varchar(50) not null,
+    headquarters varchar(50) not null,
+    founded      date        null
+);
+
+create table customer
+(
+    customer_id    int         not null,
+    customer_fname varchar(20) not null,
+    customer_lname varchar(20) not null,
+    constraint customer_customer_id_uindex
+        unique (customer_id)
+);
+
+alter table customer
+    add primary key (customer_id);
+
+create table trade
+(
+    trade_id    int auto_increment
+        primary key,
+    ticker      varchar(6)    not null,
+    contracts   int           not null,
+    strike      int           not null,
+    call_put    varchar(10)   not null,
+    expiration  date          not null,
+    buy_sell    varchar(20)   not null,
+    date_open   date          not null,
+    date_close  date          not null,
+    credit      decimal(4, 2) not null,
+    debit       decimal(4, 2) not null,
+    profit_loss decimal(4, 2) not null,
+    open_notes  varchar(50)   null,
+    close_notes varchar(50)   null,
+    broker_id   int           not null,
+    customer_id int           not null,
+    constraint TRADE_broker_id_uindex
+        unique (broker_id),
+    constraint TRADE_customer_id_uindex
+        unique (customer_id),
+    constraint broker_fk_id
+        foreign key (broker_id) references broker (broker_id),
+    constraint customer_fk_id
+        foreign key (customer_id) references customer (customer_id),
+    constraint financials_fk_ticker
+        foreign key (ticker) references company_financials (ticker),
+    constraint info_fk_ticker
+        foreign key (ticker) references company_info (ticker),
+    constraint data_fk_ticker
+        foreign key (ticker) references company_data (ticker)
+);
+
+/* CUSTOMER TABLE*/
+insert into customer (customer_id, customer_fname, customer_lname) values ('380419', 'Shandie', 'Croxley');
+insert into customer (customer_id, customer_fname, customer_lname) values ('477665', 'Jehu', 'Childs');
+insert into customer (customer_id, customer_fname, customer_lname) values ('501427', 'Chad', 'Echalie');
+insert into customer (customer_id, customer_fname, customer_lname) values ('233921', 'Steffi', 'Pert');
+insert into customer (customer_id, customer_fname, customer_lname) values ('539407', 'Aimee', 'Beveredge');
+insert into customer (customer_id, customer_fname, customer_lname) values ('802454', 'Ethyl', 'Bruniges');
+insert into customer (customer_id, customer_fname, customer_lname) values ('551766', 'Brad', 'Sabates');
+insert into customer (customer_id, customer_fname, customer_lname) values ('356570', 'Geralda', 'Sleigh');
+insert into customer (customer_id, customer_fname, customer_lname) values ('449600', 'Laurella', 'Thying');
+insert into customer (customer_id, customer_fname, customer_lname) values ('141666', 'Jolie', 'Frays');
+insert into customer (customer_id, customer_fname, customer_lname) values ('053455', 'Gunther', 'Wheater');
+insert into customer (customer_id, customer_fname, customer_lname) values ('176766', 'Korry', 'de Chastelain');
+insert into customer (customer_id, customer_fname, customer_lname) values ('574291', 'Cynthea', 'Bowles');
+insert into customer (customer_id, customer_fname, customer_lname) values ('464478', 'Jemie', 'Lindsay');
+insert into customer (customer_id, customer_fname, customer_lname) values ('242379', 'Aile', 'Aberhart');
+insert into customer (customer_id, customer_fname, customer_lname) values ('055443', 'Alica', 'Haig');
+insert into customer (customer_id, customer_fname, customer_lname) values ('089616', 'Dario', 'McCully');
+insert into customer (customer_id, customer_fname, customer_lname) values ('089543', 'Lena', 'Fernanando');
+insert into customer (customer_id, customer_fname, customer_lname) values ('137016', 'Avie', 'Coke');
+insert into customer (customer_id, customer_fname, customer_lname) values ('514756', 'Geoffrey', 'Bouzan');
+
+/* COMPANY_DATA  TABLE*/
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('DSKEW', 186.07, 594.81, 310.35, 1240.0, 955.12, 8354504, 99.76, 1.76, 141.56, 608.7);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield,52_week_high, 52_week_low) values ('PKX', 1267.98, 402.73, 1050.21, 1167.68, 714.85, 3131179, 609.56, 1.76, 1111.94, 1049.31);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('NVEE', 220.8, 27.79, 1015.53, 492.3, 470.99, 205155, 724.49, 1.76, 1386.12, 914.37);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('TDW', 673.15, 161.25, 446.33, 404.06, 291.54, 7626154, 186.69, 1.76, 617.67, 1335.87);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('FSS', 1419.07, 52.95, 150.42, 323.41, 754.32, 1720009, 854.16, 1.76, 487.17, 1125.21);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('JUNO', 1235.41, 263.5, 108.33, 1268.32, 1358.54, 288853, 807.03, 1.76, 924.06, 1324.96);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('SPNE', 682.8, 1329.1, 692.78, 262.97, 456.1, 1449100, 150.27, 1.76, 1058.18, 806.26);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('ULTI', 1208.76, 869.55, 860.93, 871.96, 873.16, 3987336, 56.35, 1.76, 342.1, 1431.76);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('DHG', 106.6, 1199.72, 363.4, 549.37, 461.19, 1194776, 355.73, 1.76, 1127.81, 1106.25);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('SRF', 1110.38, 236.37, 1114.05, 977.83, 211.37, 3843227, 367.18, 1.76, 1125.64, 909.76);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('WFBI', 174.32, 484.56, 885.09, 72.03, 793.68, 4870725, 837.66, 1.76, 832.98, 1045.57);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('BK^C', 1232.76, 13.87, 123.51, 436.12, 1247.41, 1648125, 886.66, 1.76, 1098.74, 284.95);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('MSGN', 1032.35, 315.27, 1311.32, 696.1, 76.74, 586727, 829.91, 1.76, 81.22, 997.76);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('NTRA', 1265.63, 38.71, 938.66, 495.68, 1041.55, 3933982, 715.31, 1.76, 820.18, 143.04);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('LND', 181.03, 908.19, 1213.99, 748.55, 1169.87, 6678846, 56.07, 1.76, 1299.16, 1430.89);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('NVS', 374.35, 228.55, 1259.57, 849.58, 67.4, 8245956, 32.85, 1.76, 665.05, 938.12);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('AGLE', 740.51, 1402.56, 1028.59, 882.6, 364.86, 59031502, 594.9, 1.76, 737.25, 1092.67);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('JHB', 531.29, 201.14, 631.17, 1028.51, 848.99, 1151397, 782.29, 1.76, 965.23, 556.98);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('NCB', 970.47, 880.47, 1350.5, 658.84, 187.74, 5659960, 194.31, 1.76, 490.97, 1416.72);
+insert into company_data (ticker, open, price, previous_close, high, low, market_cap, p_e_ratio, dividend_yield, 52_week_high, 52_week_low) values ('STLR', 139.03, 337.94, 458.79, 653.57, 1292.26, 3535056, 721.61, 1.76, 301.39, 308.33);
+
+
+
+/* COMPANY_FINANCIALS TABLE*/
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('TSE', 991760, 452439, 13.14, 302772, 491955);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('ABM', 985755, 820454, 57.54, 399706, 318293);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('FOXA', 395354, 221293, 90.17, 566141, 166957);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('EXR', 253911, 748715, 60.08, 377519, 619785);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('CEZ', 437827, 545307, 97.8, 139790, 353784);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('IONS', 505687, 360608, 52.33, 329658, 946475);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('SFR', 880945, 87145, 20.24, 17004, 856422);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('VDSI', 281211, 663281, 70.15, 882907, 937018);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('USAC', 870088, 788196, 83.83, 603979, 423693);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('RFDI', 548472, 453883, 49.88, 58127, 156067);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('MICT', 829744, 778724, 27.68, 608529, 540968);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('AHL', 825618, 588210, 85.62, 851047, 614418);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('MFD', 697879, 563860, 26.31, 977647, 572048);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('HBM', 315986, 787738, 23.23, 137465, 994442);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('HIW', 771048, 954913, 12.14, 209366, 193330);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('SMHI', 113137, 869047, 95.1, 239827, 688163);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('WTBA', 360699, 965873, 12.48, 927388, 466643);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('GOVNI', 369162, 400597, 16.1, 190594, 90092);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('KONE', 461957, 98970, 58.6, 898669, 961671);
+insert into company_financials (ticker, revenue, net_income, eps, operating_income, cash_income) values ('TYL', 308445, 154055, 1.27, 3967, 687599);
+
+/* COMPANY_INFO TABLE*/
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('EAGL', 'Double Eagle Acquisition Corp.', 'NASDAQ', 'Finance', 'Business Services', 'Kizzie', 'Port-de-Bouc', '2021-09-06');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('IHIT', 'Invesco High Income 2023 Target Term Fund', 'NYSE', 'n/a', 'n/a', 'Lettie', 'Ruteng', '2021-02-15');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('ETFC', 'E*TRADE Financial Corporation', 'NASDAQ', 'Finance', 'Savings Institutions', 'Lorita', 'Bang Pahan', '2021-09-08');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('RCM', 'R1 RCM Inc.', 'NASDAQ', 'Consumer Services', 'Other Consumer Services', 'Arlen', 'Matanza', '2021-09-01');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('UNFI', 'United Natural Foods, Inc.', 'NASDAQ', 'Consumer Non-Durables', 'Food Distributors', 'Fey', 'Fiais da Beira', '2021-08-02');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('HOLX', 'Hologic, Inc.', 'NASDAQ', 'Health Care', 'Medical Electronics', 'Bridget', 'Sukadana', '2021-10-21');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('CO', 'China Cord Blood Corporation', 'NYSE', 'Finance', 'Business Services', 'Aurel', 'Xinji', '2021-05-19');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('CRUS', 'Cirrus Logic, Inc.', 'NASDAQ', 'Technology', 'Semiconductors', 'Robb', 'El Paso', '2021-06-19');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('MTN', 'Vail Resorts, Inc.', 'NYSE', 'Consumer Services', 'Services-Misc. Amusement & Recreation', 'Victor', 'Galván', '2021-09-15');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('ABIL', 'Ability Inc.', 'NASDAQ', 'Finance', 'Business Services', 'Babbette', 'Niutang', '2020-11-16');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('ECYT', 'Endocyte, Inc.', 'NASDAQ', 'Health Care', 'Major Pharmaceuticals', 'Jacquette', 'Muarapinang', '2021-07-05');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('AGD', 'Alpine Global Dynamic Dividend Fund', 'NYSE', 'n/a', 'n/a', 'Jana', 'Anastácio', '2021-02-01');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('XPER', 'Xperi Corporation', 'NASDAQ', 'Technology', 'Semiconductors', 'Fanny', 'Bilicenii Vechi', '2021-05-03');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('NAP', 'Navios Maritime Midstream Partners LP', 'NYSE', 'n/a', 'n/a', 'Xylina', 'Albardón', '2021-04-20');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('FPT', 'Federated Premier Intermediate Municipal Income Fund', 'NYSE', 'n/a', 'n/a', 'Levin', 'Dongjiahe', '2021-04-04');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('XNET', 'Xunlei Limited', 'NASDAQ', 'Technology', 'Computer Software: Prepackaged Software', 'Bogart', 'Moscow', '2021-08-02');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('SAN^A', 'Banco Santander, S.A.', 'NYSE', 'n/a', 'n/a', 'Georgeta', 'Huating', '2021-01-31');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('LPI', 'Laredo Petroleum, Inc.', 'NYSE', 'Energy', 'Oil & Gas Production', 'Anatole', 'Santa Clara', '2021-06-29');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('PKOH', 'Park-Ohio Holdings Corp.', 'NASDAQ', 'Capital Goods', 'Industrial Specialties', 'Dusty', 'San Antonio', '2021-04-13');
+insert into company_info (ticker, company_name, exchange, sector, industry, ceo, headquarters, founded) values ('TCBI', 'Texas Capital Bancshares, Inc.', 'NASDAQ', 'Finance', 'Major Banks', 'Ava', 'Il’ka', '2021-06-12');
+
+/* TRADE TABLE*/
+insert into trade (trade_id, ticker, contracts, strike, call_put, expiration, buy_sell, date_open, date_close, credit, debit, profit_loss, open_notes, close_notes, broker_id, customer_id) values (1, 'ABIL', 5, 369, 'congue', '2021-10-17', 'quis', '2021-04-05', '2021-05-28', 7.98, 6.79, 1.19, 'sapien varius ut blandit non interdum in ante vestibulum', null, '120784, '53455');
+insert into trade (trade_id, ticker, contracts, strike, call_put, expiration, buy_sell, date_open, date_close, credit, debit, profit_loss, open_notes, close_notes, broker_id, customer_id) values (2, 'AGD', 8, 176, 'ultrices', '2021-07-01', 'vivamus', '2021-08-16', '2021-01-21', 0.42, 2.34, -1.92, null, null, '120784', '53455');
+insert into trade (trade_id, ticker, contracts, strike, call_put, expiration, buy_sell, date_open, date_close, credit, debit, profit_loss, open_notes, close_notes, broker_id, customer_id) values (3, 'CO', 2, 842, 'at', '2021-07-28', 'magna', '2021-01-25', '2021-07-03', 1.2, 6.16, -4.96, 'sociis natoque penatibus et magnis dis parturient', 'commodo vulputate justo in blandit', '120784', '53455');
+insert into trade (trade_id, ticker, contracts, strike, call_put, expiration, buy_sell, date_open, date_close, credit, debit, profit_loss, open_notes, close_notes, broker_id, customer_id) values (4, 'CRUS', 6, 474, 'condimentum', '2021-03-27', 'lobortis', '2021-02-17', '2021-10-17', 4.93, 0.85, 4.08, 'bibendum imperdiet nullam orci pede venenatis non sodales', 'a feugiat et eros vestibulum ac est lacinia nisi', '228580', '53455');
+insert into trade (trade_id, ticker, contracts, strike, call_put, expiration, buy_sell, date_open, date_close, credit, debit, profit_loss, open_notes, close_notes, broker_id, customer_id) values (5, 'EAGL', 10, 870, 'nunc', '2021-04-07', 'turpis', '2020-12-26', '2021-06-26', 3.12, 8.88, -5.76, 'augue quam sollicitudin vitae consectetuer eget', 'nisi venenatis tristique fusce congue', '411749, '53455');
